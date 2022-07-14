@@ -21,8 +21,8 @@ const Container = styled.div`
 const basico = [
 { descripcion: 'HTML, CSS, Java Script', ok: true },
 { descripcion: 'Cerficado SSL', ok: true },
-{ descripcion: 'Boton de Whats App', ok: true },
-{ descripcion: 'Cerficado SSL', ok: true },
+{ descripcion: 'Redireccion a Whats App personalizado', ok: true },
+{ descripcion: 'Acceso a APIS', ok: true },
 {descripcion: 'Dominio personalizado', ok: true},
 {descripcion: 'Autenticacion de usuario con Google', ok:false},
 {descripcion: 'Panel de administracion',ok:false},

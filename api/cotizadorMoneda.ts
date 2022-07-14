@@ -6,7 +6,7 @@ interface ApiResponse {
     venta: string;
 }
 const monedaApi = axios.create({
-    baseURL: 'https://api-dolar-argentina.herokuapp.com/api'
+    baseURL: 'https://cors-solucion.herokuapp.com/https://api-dolar-argentina.herokuapp.com/api'
 });
 
 export const getCotizacionDolarBlue = async() => {
