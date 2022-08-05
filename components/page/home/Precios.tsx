@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getCotizacionDolarBlue, getCotizacionDolarOficial } from '../../../api/cotizadorMoneda';
+import { getPlanes } from '../../../firebase/queries';
 import { CardPlan } from '../../CardPlan';
 import { Section, Title } from '../../Section.element';
+import { Spinner } from '../../Spinner';
 
 const Container = styled.div`
    width: 100%;
@@ -18,43 +20,22 @@ const Container = styled.div`
    }
 `;
 
-const basico = [
-{ descripcion: 'HTML, CSS, Java Script', ok: true },
-{ descripcion: 'Cerficado SSL', ok: true },
-{ descripcion: 'Redireccion a Whats App personalizado', ok: true },
-{ descripcion: 'Acceso a APIS', ok: true },
-{descripcion: 'Dominio personalizado', ok: true},
-{descripcion: 'Autenticacion de usuario con Google', ok:false},
-{descripcion: 'Panel de administracion',ok:false},
-{ descripcion: 'Acceso offline', ok: false },
-]
-const estandar = [
-  {descripcion: 'Caracteristicas del plan Basico', ok:true},
-  {descripcion: 'Autenticacion de usuario con Google', ok:true},
-  {descripcion: 'Panel de administracion',ok:true},
-  { descripcion: 'MERN', ok: true },
-  {descripcion: 'Consumo de APIS propias y externas',ok:true},
-  {descripcion: 'Base de datos ilimitada', ok:true},
-  { descripcion: 'Acceso offline', ok: false },
-  ]
 
-  const prem = [
-    {descripcion: 'Caracteristicas plan Basico y Estandar', ok:true},
-    { descripcion: 'Acceso offline', ok: true },
-    {descripcion: 'Marcado Pago API',ok:true},
-    { descripcion: 'Paypal Api', ok: true },
-    { descripcion: 'Mail empresarial', ok: true },
-  ];
-const PLANES = [
-  { plan: 'Plan Basico', precio: 60, servicios: basico },
-  { plan: 'Plan Estandar', precio: 98, servicios: estandar },
-  { plan: 'Premium', precio: 500, servicios: prem },
-]
-
+interface PlanProps {
+  id:number;
+  name:string;
+  description: DescriptionPlan[];
+  price:number;
+}
+interface DescriptionPlan{
+  text: string;
+  ok:boolean;
+}
 
 export const Precios = () => {
 
   const [cotizacionMoneda, setCotizacionMoneda] = useState<any>();
+  const [planes, setPlanes] = useState<PlanProps[]>([]);
 
   useEffect(() => {
     const monedaApi = async () => {
@@ -66,7 +47,13 @@ export const Precios = () => {
       });
     }
 
+    const getPlanesFromDB = async() => {
+      const resp = await getPlanes();
+      setPlanes(resp);
+    }
+
     monedaApi();
+    getPlanesFromDB();
   }, []);
 
 
@@ -74,19 +61,19 @@ export const Precios = () => {
     <Section color='#fff' bg='#0b0a20'>
       <Title>Precios</Title>
       <Container>
-        
           {
-            (cotizacionMoneda) &&
-            PLANES.map(plan => (
+            (planes.length > 0 && cotizacionMoneda) ?
+            planes.map( plan => (
                 <CardPlan
-                key={plan.plan}
+                  key={plan.name}
                   cotizacion={cotizacionMoneda}
-                  plan={plan.plan}
-                  servicios={plan.servicios}
-                  precio={plan.precio}
+                  plan={plan.name}
+                  servicios={plan.description}
+                  precio={plan.price}
+                  id={plan.id}
                 />
-
-            ))
+            )):
+            <Spinner/>
           }
       </Container>
     </Section>

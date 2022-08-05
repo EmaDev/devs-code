@@ -24,9 +24,17 @@ const Title = styled.h3`
    font-size: 3.5rem;
    margin: 0;
    padding: 0;
+   padding-top: 1rem;
    color: #0B0B15;
    text-align:center; 
    font-weight: 700;
+`;
+const SubTitle = styled.h4`
+   font-size: 2.6rem;
+   margin: 1rem;
+   color: #0B0B15;
+   text-align:center; 
+   font-weight: 500;
 `;
 
 const Precio = styled.h4<any>`
@@ -88,7 +96,7 @@ const ItemServicio = styled.div`
     }
 `;
 
-const Button = styled.button`
+const Button = styled.a`
    position:absolute;
    width: 90%;
    padding: 1rem 2rem;
@@ -99,6 +107,7 @@ const Button = styled.button`
    border-radius: 6px;
    font-size: 2rem;
    font-weight: 700;
+   text-align:center;
 
    &:hover{
     background-color: #0b0a20;
@@ -108,55 +117,67 @@ const Button = styled.button`
 `;
 
 interface Servicio {
-    descripcion: string;
+    text: string;
     ok: boolean;
 }
-interface Moneda{
+interface Moneda {
     compra: number; venta: number; fecha: string;
 }
 interface Props {
-    cotizacion: {blue: Moneda; oficial:Moneda;};
+    cotizacion: { blue: Moneda; oficial: Moneda; };
     plan: string;
     servicios: Servicio[];
     precio: number;
+    id: number;
 }
-export const CardPlan: FC<Props> = ({ cotizacion, plan, servicios, precio }) => {
+export const CardPlan: FC<Props> = ({ cotizacion, plan, servicios, precio, id }) => {
 
     const [priceIsActive, setPriceIsActive] = useState<boolean>(false);
+
     return (
         <Card>
             <CardHead>
                 <Title>{plan}</Title>
-                <Precio>US$:<span>{moneyFormatter(precio)}</span></Precio>
-                <Precio ars={true}>ARS:<span>{moneyFormatter(precio * cotizacion.blue.venta)}</span>
-                    <HiQuestionMarkCircle color='#6DAF69'
-                        onClick={() => setPriceIsActive(!priceIsActive)}
-                    />
-                </Precio>
-
                 {
-                    (priceIsActive) &&
-                    <DivPrecioEnPesos>
-                        <h4>{cotizacion.blue.fecha}</h4>
-                        <p>Dolar Blue: $<span>{cotizacion.blue.venta}</span></p>
-                        <p>Dolar Oficial: $<span>{cotizacion.oficial.venta}</span></p>
-                    </DivPrecioEnPesos>
+                    (id !== 3) ?
+                    <>
+                        <Precio>US$:<span>{moneyFormatter(precio)}</span></Precio>
+                        <Precio ars={true}>ARS:<span>{moneyFormatter(precio * cotizacion.blue.venta)}</span>
+                            <HiQuestionMarkCircle color='#6DAF69'
+                                onClick={() => setPriceIsActive(!priceIsActive)}
+                            />
+                        </Precio>
+
+                        {
+                            (priceIsActive) &&
+                            <DivPrecioEnPesos>
+                                <h4>{cotizacion.blue.fecha}</h4>
+                                <p>Dolar Blue: $<span>{cotizacion.blue.venta}</span></p>
+                                <p>Dolar Oficial: $<span>{cotizacion.oficial.venta}</span></p>
+                            </DivPrecioEnPesos>
+                        }
+                    </>
+                    :
+                    <SubTitle>Consultar por costos</SubTitle>
                 }
             </CardHead>
             <Servicios>
                 {servicios.map((servicio, i) => (
                     <ItemServicio key={i}>
                         {
-                            (servicio.ok) ? 
-                            <HiCheckCircle size="2.5rem" />
-                            :
-                            <HiX size="2.5rem"/>
+                            (servicio.ok) ?
+                                <HiCheckCircle size="2.5rem" />
+                                :
+                                <HiX size="2.5rem" />
                         }
-                        <p>{servicio.descripcion}</p>
+                        <p>{servicio.text}</p>
                     </ItemServicio>
                 ))}
+
             </Servicios>
-            <Button>Contactar</Button>
+            <Button href={`https://wa.me/+541164340872?text=Hola,%20quiero%20saber%20mas%20sobre%20el%20plan%20${plan}`}>
+                Contactar
+            </Button>
         </Card>
     )
 }

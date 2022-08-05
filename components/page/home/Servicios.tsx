@@ -38,7 +38,6 @@ export const Servicios = () => {
     return (
         <Section color='#0B0B15'>
             <Title>Servicios</Title>
-
             <Container>
                 <ImageCard>
                     <Image src={require('../../../assets/images/depliegue.svg')} width='250px' height='250px' alt="desplige"/>

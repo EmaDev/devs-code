@@ -58,7 +58,7 @@ export const Header = () => {
         <HeaderContainer>
             <BackgrounHeader />
             <Image src={require('../../../assets/images/logo.png')}
-                width={240} height={38}
+                width={220} height={40}
                 style={{zIndex: 2}}
                 alt="logo empresa"
             />
